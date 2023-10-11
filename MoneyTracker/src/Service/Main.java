@@ -2,9 +2,13 @@ package Service;
 
 import java.util.Scanner;
 
+import Database.GottenMoney;
+import Database.SpentMoney;
+
 public class Main {
-	GottenMoney GottenMoney = new GottenMoney();
-	SpentMoney SpentMoney = new SpentMoney();
+
+	SpentMoney spentMoney = new SpentMoney();
+	GottenMoney gottenMoney = new GottenMoney();
 
 	protected Scanner scanner = new Scanner(System.in);
 	boolean exit;
@@ -34,10 +38,10 @@ public class Main {
 			System.exit(0);
 			break;
 		case 1:
-			GottenMoney.gottenMoney();
+			gottenMoney.gottenMoney();
 			break;
 		case 2:
-			SpentMoney.spentMoney();
+			spentMoney.spentMoney();
 			break;
 		case 3:
 			displayProfit();
@@ -45,7 +49,7 @@ public class Main {
 	}
 
 	public int displayProfit() {
-		int profit = SpentMoney.spentMoney() + GottenMoney.gottenMoney();
+		int profit = spentMoney.spentMoney() - gottenMoney.gottenMoney();
 		System.out.println(profit);
 		return profit;
 	}

@@ -1,16 +1,17 @@
 package Database;
 
 import java.sql.*;
+import java.util.Scanner;
 
 public class DatabaseService {
 	String url = "jdbc:postgresql://localhost:5432/";
-	String dbName = "BankAdmin";
-	String password = "securepassword";
+	String dbName = "MoneyTracker";
+	String password = "moneyTracker";
 
-	private Connection connect_to_DB() {
+	public Connection connect_to_DB() {
 		Connection connection = null;
 		try {
-			Class.forName("org.postresql.Driver");
+			Class.forName("org.postgresql.Driver");
 			connection = DriverManager.getConnection(url, dbName, password);
 			if (connection != null) {
 				System.out.println("Connection established.");
@@ -23,19 +24,6 @@ public class DatabaseService {
 		return connection;
 	}
 
-	// CREATE
-	int Money(int gotten_Money, int spent_Money) {
-		Connection connection = connect_to_DB();
-		int gottenMoney = -1;
-		int spentMoney = -1;
-		
-		try {
-			connection.setAutoCommit(false);
-		}	catch (Exception e){
-			System.err.println("Error: " + e.getMessage());
-		}
-		
-		return spentMoney;
-
-	}
+	Connection connection = connect_to_DB();
+	static Scanner scanner = new Scanner(System.in);
 }
