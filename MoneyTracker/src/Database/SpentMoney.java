@@ -5,6 +5,8 @@ import java.sql.ResultSet;
 import java.sql.Statement;
 
 public class SpentMoney extends DatabaseService {
+	public String transactionType = "spending";
+	
 	public int spentMoney() {
 		System.out.print("Enter amount of money you've spent: ");
 		int spent_Money = Integer.parseInt(scanner.nextLine());
@@ -20,6 +22,7 @@ public class SpentMoney extends DatabaseService {
 			if (addSpentMoneyResult.next()) {
 				addSpentMoneyResult.getInt(1);
 			}
+			connection.commit();
 		} catch (Exception e) {
 			System.err.println("Error: " + e.getMessage());
 		}

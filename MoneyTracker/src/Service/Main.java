@@ -2,6 +2,7 @@ package Service;
 
 import java.util.Scanner;
 
+import Database.GettingValuesFromDB;
 import Database.GottenMoney;
 import Database.SpentMoney;
 
@@ -9,7 +10,8 @@ public class Main {
 
 	SpentMoney spentMoney = new SpentMoney();
 	GottenMoney gottenMoney = new GottenMoney();
-
+	GettingValuesFromDB gettingValuesFromDB = new GettingValuesFromDB();
+	
 	protected Scanner scanner = new Scanner(System.in);
 	boolean exit;
 
@@ -48,8 +50,8 @@ public class Main {
 		}
 	}
 
-	public int displayProfit() {
-		int profit = spentMoney.spentMoney() - gottenMoney.gottenMoney();
+	public double displayProfit() {
+		double profit = gettingValuesFromDB.gettingValuesFromDB("gotten_money") + gettingValuesFromDB.gettingValuesFromDB("spent_money");
 		System.out.println(profit);
 		return profit;
 	}
@@ -65,12 +67,11 @@ public class Main {
 				if (choice < 0 || choice > 3) {
 					System.out.println("Choice is out of range.");
 				}
-
 			} catch (NumberFormatException e) {
 				System.err.println(e);
 			}
-
 		} while (choice < 0 || choice > 3);
+
 		return choice;
 	}
 }
