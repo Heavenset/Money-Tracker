@@ -8,9 +8,9 @@ import Database.SpentMoney;
 
 public class Main {
 
-	SpentMoney spentMoney = new SpentMoney();
-	GottenMoney gottenMoney = new GottenMoney();
-	GettingValuesFromDB gettingValuesFromDB = new GettingValuesFromDB();
+	SpentMoney SpentMoney = new SpentMoney();
+	GottenMoney GottenMoney = new GottenMoney();
+	GettingValuesFromDB GettingValuesFromDB = new GettingValuesFromDB();
 	
 	protected Scanner scanner = new Scanner(System.in);
 	boolean exit;
@@ -40,18 +40,18 @@ public class Main {
 			System.exit(0);
 			break;
 		case 1:
-			gottenMoney.gottenMoney();
+			GottenMoney.gottenMoney();
 			break;
 		case 2:
-			spentMoney.spentMoney();
+			SpentMoney.spentMoney();
 			break;
 		case 3:
 			displayProfit();
 		}
 	}
 
-	public double displayProfit() {
-		double profit = gettingValuesFromDB.gettingValuesFromDB("gotten_money") + gettingValuesFromDB.gettingValuesFromDB("spent_money");
+	public int displayProfit() {
+		int profit = GettingValuesFromDB.gettingValuesFromDB("gotten_money") - GettingValuesFromDB.gettingValuesFromDB("spent_money");
 		System.out.println(profit);
 		return profit;
 	}
