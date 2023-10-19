@@ -16,7 +16,6 @@ public class FileManips {
 	static String path;
 
 	public void writeToFile(String transactionType, int number) throws IOException {
-		String path;
 		if (transactionType.equals("spending")) {
 			path = "D:/MoneyTracker/spendingData.txt";
 		} else {
@@ -29,8 +28,6 @@ public class FileManips {
 			if (!file.exists()) {
 				file.createNewFile(); // Create the file if it doesn't exist
 				System.out.println("File created: " + path);
-			} else {
-				System.out.println("File already exists: " + path);
 			}
 			FileOutputStream fos = new FileOutputStream(file, true);
 			OutputStreamWriter writer = new OutputStreamWriter(fos, StandardCharsets.UTF_8);
@@ -43,10 +40,8 @@ public class FileManips {
 
 	}
 
-	List<Integer> values = new ArrayList<>();
-
 	public int readFromFile() throws IOException {
-
+		List<Integer> values = new ArrayList<>();
 		try (BufferedReader reader = new BufferedReader(new FileReader(path))) {
 			String line;
 			while ((line = reader.readLine()) != null) {
@@ -54,7 +49,7 @@ public class FileManips {
 					int value = Integer.parseInt(line);
 					values.add(value);
 				} catch (NumberFormatException e) {
-					System.err.println("Skipping invalid line: " + line);
+
 				}
 			}
 		} catch (IOException e) {

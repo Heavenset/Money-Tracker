@@ -108,7 +108,7 @@ public class Main extends Application {
 			int spent = Integer.parseInt(text);
 			try {
 				FileManips.writeToFile("spending", spent);
-				currentTransactionLabel.setText("You've spent $" + spent);
+				currentTransactionLabel.setText("You've spent: $" + spent);
 				spentTotal.setValue(FileManips.readFromFile());
 				outputLabel.setText("Amount of ALL SPENT money: $" + spentTotal);
 			} catch (IOException e) {
@@ -119,9 +119,10 @@ public class Main extends Application {
 		});
 
 		profitButton.setOnAction(event -> {
+
 			int profit = gottenTotal.addAndGet(-spentTotal.getValue());
 			outputLabel.setText("Profit: $" + profit);
-
+			profit = 0;
 		});
 
 		clearButton.setOnAction(event -> {
