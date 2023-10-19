@@ -2,12 +2,11 @@ package etc;
 
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileWriter;
+import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
+import java.io.OutputStreamWriter;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -17,28 +16,36 @@ public class FileManips {
 	static String path;
 
 	public void writeToFile(String transactionType, int number) throws IOException {
+		String path;
 		if (transactionType.equals("spending")) {
 			path = "D:/MoneyTracker/spendingData.txt";
 		} else {
 			path = "D:/MoneyTracker/gettingData.txt";
 		}
-		String folderPath = "D:/MoneyTracker";
-		File file = new java.io.File(path);
-		file.getParentFile().mkdirs();
-		Path folder = Paths.get(path);
 
-		if (!Files.exists(folder)) {
-			Files.createDirectories(folder);
-			System.out.println("Folder created: " + folderPath);
-			FileWriter writer = new FileWriter(file, true);
-			writer.write(String.valueOf(number) + "\n");
+		File file = new File(path);
+
+		try {
+			if (!file.exists()) {
+				file.createNewFile(); // Create the file if it doesn't exist
+				System.out.println("File created: " + path);
+			} else {
+				System.out.println("File already exists: " + path);
+			}
+			FileOutputStream fos = new FileOutputStream(file, true);
+			OutputStreamWriter writer = new OutputStreamWriter(fos, StandardCharsets.UTF_8);
+			writer.write(Integer.toString(number) + "\n");
 			writer.close();
-			System.out.println("Number written to file: " + number);
+
+		} catch (IOException e) {
+			e.printStackTrace();
 		}
+
 	}
 
+	List<Integer> values = new ArrayList<>();
+
 	public int readFromFile() throws IOException {
-		List<Integer> values = new ArrayList<>();
 
 		try (BufferedReader reader = new BufferedReader(new FileReader(path))) {
 			String line;
@@ -53,10 +60,11 @@ public class FileManips {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+		// Getting sum from files
 		BinaryOperator<Integer> accumulator = (x, y) -> x + y;
 		Optional<Integer> sum = values.stream().reduce(accumulator);
 
-		int summary = sum.get();
+		int summary = sum.orElse(0);
 
 		return summary;
 	}

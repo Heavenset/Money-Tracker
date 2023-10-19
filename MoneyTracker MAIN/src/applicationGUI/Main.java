@@ -1,10 +1,10 @@
 package applicationGUI;
 
 import javafx.scene.control.TextField;
-import database.ClearValuesDB;
-import database.GettingValuesFromDB;
-import database.GottenMoney;
-import database.SpentMoney;
+
+import java.io.IOException;
+
+import etc.FileManips;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -14,6 +14,7 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
+import org.apache.commons.lang3.mutable.MutableInt;
 
 // Current load time is ~370ms
 public class Main extends Application {
@@ -23,6 +24,7 @@ public class Main extends Application {
 		TextField textField = new TextField();
 		Scene scene = new Scene(root);
 		Image icon = new Image("image.png");
+		FileManips FileManips = new FileManips();
 
 		Button gottenMoneyButton = new Button("Gotten Money");
 		Button spentMoneyButton = new Button("Spent Money");
@@ -31,11 +33,6 @@ public class Main extends Application {
 
 		Label outputLabel = new Label("Total");
 		Label currentTransactionLabel = new Label("Current Transaction");
-
-		SpentMoney spentMoney = new SpentMoney();
-		GottenMoney gottenMoney = new GottenMoney();
-		GettingValuesFromDB GettingValuesFromDB = new GettingValuesFromDB();
-		ClearValuesDB ClearValuesDB = new ClearValuesDB();
 
 		stage.setResizable(false);
 		stage.setWidth(840);
@@ -89,42 +86,51 @@ public class Main extends Application {
 
 		stage.show();
 
+		MutableInt gottenTotal = new MutableInt(0);
 		gottenMoneyButton.setOnAction(event -> {
+
 			String text = textField.getText();
 			int gotten = Integer.parseInt(text);
-			currentTransactionLabel.setText("You've got $" + gotten);
-			gottenMoney.gottenMoney(gotten);
-			Integer total = GettingValuesFromDB.gettingValuesFromDB("gotten_money");
-			outputLabel.setText("Amount of ALL GOTTEN money: $" + total.toString());
+			try {
+				FileManips.writeToFile("gotten", gotten);
+				currentTransactionLabel.setText("You've got $" + gotten);
+				gottenTotal.setValue(FileManips.readFromFile());
+				outputLabel.setText("Amount of ALL GOTTEN money: $" + gottenTotal.toString());
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
 			textField.clear();
 		});
 
+		MutableInt spentTotal = new MutableInt(0);
 		spentMoneyButton.setOnAction(event -> {
 			String text = textField.getText();
 			int spent = Integer.parseInt(text);
-			currentTransactionLabel.setText("You've spent $" + spent);
-			spentMoney.spentMoney(spent);
-			Integer total = GettingValuesFromDB.gettingValuesFromDB("spent_money");
-			total.toString();
-			outputLabel.setText("Amount of ALL SPENT money: $" + total.toString());
+			try {
+				FileManips.writeToFile("spending", spent);
+				currentTransactionLabel.setText("You've spent $" + spent);
+				spentTotal.setValue(FileManips.readFromFile());
+				outputLabel.setText("Amount of ALL SPENT money: $" + spentTotal);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
 			textField.clear();
+
 		});
 
 		profitButton.setOnAction(event -> {
-			Integer total = GettingValuesFromDB.gettingValuesFromDB("gotten_money")
-					- GettingValuesFromDB.gettingValuesFromDB("spent_money");
-			total.toString();
-			if (total < 0) {
-				total = Math.abs(total);
-				outputLabel.setText("Your PROFIT is: -$" + total.toString());
-			} else {
-				outputLabel.setText("Your PROFIT is: $" + total.toString());
-			}
+			int profit = gottenTotal.addAndGet(-spentTotal.getValue());
+			outputLabel.setText("Profit: $" + profit);
+
 		});
 
 		clearButton.setOnAction(event -> {
-			ClearValuesDB.clearValuesDB();
+
 			textField.clear();
 		});
+	}
+
+	public static void main(String[] args) {
+		launch(args);
 	}
 }
