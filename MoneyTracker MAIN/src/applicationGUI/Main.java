@@ -4,7 +4,6 @@ import javafx.scene.control.TextField;
 
 import java.io.IOException;
 
-import etc.FileManips;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -16,8 +15,14 @@ import javafx.stage.Stage;
 
 import org.apache.commons.lang3.mutable.MutableInt;
 
+import fileFunctions.FileManips;
+
 // Current load time is ~370ms
 public class Main extends Application {
+	public static void main(String[] args) {
+		launch(args);
+	}
+
 	@SuppressWarnings({ "exports" })
 	public void start(Stage stage) throws Exception {
 		StackPane root = new StackPane();
@@ -42,6 +47,7 @@ public class Main extends Application {
 		stage.setScene(scene);
 
 		root.setStyle("-fx-background-color: black;");
+		// Adding b
 		root.getChildren().addAll(outputLabel, currentTransactionLabel, gottenMoneyButton, spentMoneyButton,
 				profitButton, clearButton, textField);
 
@@ -119,19 +125,14 @@ public class Main extends Application {
 		});
 
 		profitButton.setOnAction(event -> {
-
-			int profit = gottenTotal.addAndGet(-spentTotal.getValue());
+			int profit = gottenTotal.getValue() - spentTotal.getValue();
 			outputLabel.setText("Profit: $" + profit);
 			profit = 0;
 		});
 
 		clearButton.setOnAction(event -> {
-
+			FileManips.deleteFolder();
 			textField.clear();
 		});
-	}
-
-	public static void main(String[] args) {
-		launch(args);
 	}
 }

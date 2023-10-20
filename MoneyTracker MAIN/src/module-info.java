@@ -1,8 +1,7 @@
-module Prototype {
+module MoneyTracker {
 	exports applicationGUI;
-	exports etc;
+	exports fileFunctions;
 
-	requires java.sql;
 	requires javafx.controls;
 	requires java.desktop;
 	requires javafx.graphics;
